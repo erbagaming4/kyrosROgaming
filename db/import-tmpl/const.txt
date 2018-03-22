@@ -13,3 +13,11 @@
 // NOTE:            Parameters are special in that they retrieve certain runtime values depending on the specified ID
 //                  in field Value. Depending on the implementation values assigned by scripts to parameters will affect
 //                  runtime values, such as Zeny, as well (see pc_readparam/pc_setparam).
+
+// Modified
+RDMOPTG_WEP    1
+RDMOPTG_EQARM    2
+RDMOPTG_EQSH    3
+RDMOPTG_EQGAR    4
+RDMOPTG_EQFOOT    5
+RDMOPTG_EQACC    6
