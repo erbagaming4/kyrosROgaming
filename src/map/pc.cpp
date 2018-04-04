@@ -757,7 +757,18 @@ int pc_equippoint_sub(struct map_session_data *sd,struct item_data* id){
 int pc_equippoint(struct map_session_data *sd,int n){
 	nullpo_ret(sd);
 
-	return pc_equippoint_sub(sd,sd->inventory_data[n]);
+	int ep = pc_equippoint_sub(sd, sd->inventory_data[n]);
+	
+	if (battle_config.reserved_costume_id &&
+		sd->inventory.u.items_inventory[n].card[0] == CARD0_CREATE &&
+		MakeDWord(sd->inventory.u.items_inventory[n].card[2], sd->inventory.u.items_inventory[n].card[3]) == battle_config.reserved_costume_id)
+	{ // Costume Item - Converted
+		if (ep&EQP_HEAD_TOP) { ep &= ~EQP_HEAD_TOP; ep |= EQP_COSTUME_HEAD_TOP; }
+		if (ep&EQP_HEAD_LOW) { ep &= ~EQP_HEAD_LOW; ep |= EQP_COSTUME_HEAD_LOW; }
+		if (ep&EQP_HEAD_MID) { ep &= ~EQP_HEAD_MID; ep |= EQP_COSTUME_HEAD_MID; }
+		if (ep&EQP_GARMENT) { ep &= ~EQP_GARMENT; ep |= EQP_COSTUME_GARMENT; }
+	}
+	return ep;
 }
 
 /**
@@ -7607,7 +7618,8 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 	if (hp) clif_updatestatus(sd,SP_HP);
 	else return;
 
-	if (!src)
+
+	if( !src || src == &sd->bl )
 		return;
 
 	if( pc_issit(sd) ) {
@@ -7623,7 +7635,10 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 
 	if( sd->status.ele_id > 0 )
 		elemental_set_target(sd,src);
-
+	if( src->type == BL_PC ) 
+	{
+	((TBL_PC*)src)->canlog_tick = gettick();
+	}
 	if(battle_config.prevent_logout_trigger&PLT_DAMAGE)
 		sd->canlog_tick = gettick();
 }
