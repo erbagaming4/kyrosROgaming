@@ -467,7 +467,11 @@ ACMD_FUNC(mapmove)
 			clif_displaymessage(fd, msg_txt(sd,909)); // Please enter a map (usage: @warp/@rura/@mapmove <mapname> <x> <y>).
 			return -1;
 	}
-
+	/* warp/go delay */
+	if( !pc_get_group_level(sd) && DIFF_TICK(gettick(),sd->canlog_tick) < 5000 ) {
+		clif_displaymessage(fd,"System Admin: @warp cannot be issued since you were into battle recently");
+		return -1;
+	} /* warp/go delay */
 	mapindex = mapindex_name2id(map_name);
 	if (mapindex)
 		m = map_mapindex2mapid(mapindex);
@@ -1959,7 +1963,11 @@ ACMD_FUNC(go)
 
 		return -1;
 	}
-
+	/* warp/go delay */
+	if( !pc_get_group_level(sd) && DIFF_TICK(gettick(),sd->canlog_tick) < 5000 ) {
+	clif_displaymessage(fd,"System Admin: @go cannot be issued since you were into battle recently");
+	return -1;
+	}/* warp/go delay */
 	// get possible name of the city
 	map_name[MAP_NAME_LENGTH-1] = '\0';
 	for (i = 0; map_name[i]; i++)
