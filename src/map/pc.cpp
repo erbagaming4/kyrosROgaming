@@ -7607,7 +7607,8 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 	if (hp) clif_updatestatus(sd,SP_HP);
 	else return;
 
-	if (!src)
+
+	if( !src || src == &sd->bl )
 		return;
 
 	if( pc_issit(sd) ) {
@@ -7623,7 +7624,10 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 
 	if( sd->status.ele_id > 0 )
 		elemental_set_target(sd,src);
-
+	if( src->type == BL_PC ) 
+	{
+	((TBL_PC*)src)->canlog_tick = gettick();
+	}
 	if(battle_config.prevent_logout_trigger&PLT_DAMAGE)
 		sd->canlog_tick = gettick();
 }
