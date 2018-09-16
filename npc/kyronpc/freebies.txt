@@ -1,0 +1,171 @@
+// ====================================================
+// Freebies
+// ====================================================
+new_1-2,99,30,5	script	Sir Knight	686,{
+if(#freebie_quest == 0){
+	mes "[Sir Knight]";
+	mes "Nice to meet you "+ strcharinfo ( 0 ) +", my name is Jacques";
+	mes "Welcome to ^E066FFKyros Ragnarok Online!^000000";
+	mes "I see that you're new here so to help you out I'd like to give you these";
+	mes "items as a gift to show how much we appreciate you here!";
+next;
+	mes "[Sir Knight]";
+	mes "Wish to receive your Freebies?";
+next;
+switch(select("-Yes:-No")) {
+		case 1:
+				getitembound 33001,1,1;
+				getitembound 33002,1,1;
+				getitembound 13599,15,1;
+				getitembound 14001,50,1;
+				getitembound 14216,10,1;
+				getitembound 13990,10,1;
+				getitembound 12323,500,1;
+				getitembound 569,200,1;
+			set #freebie_quest,1;
+				next;
+					mes "Now Grow Strong Noobie!";
+					close;
+		
+		case 2:
+			mes "Okay Just come back if you are ready to receive your freebies!";
+			close;
+			}
+		}
+
+if(#freebie_quest == 1) 
+	{
+		npctalk "[Sir Knight]: you already have your freebies!";
+		warp "guild_vs5",48,50;
+		end;
+	}
+
+OnInit:
+	waitingroom "Freebies",0;
+	end;
+
+}
+/*
+new_1-2,99,30,5	script	Sir Knight	686,{
+if(#freebie_quest == 0){
+setarray .@jobs,
+		4008,4009,4010,4011,4012,4019,
+		4013,4015,((Sex)?4020:4021),4016,4017,4018,
+		Job_Gunslinger,4047,4049,25;
+	set .@size, getarraysize(.@jobs);
+	for(set .@i,0; .@i<.@size; set .@i,.@i+1)
+		set .@menu$,.@menu$+jobname(.@jobs[.@i])+":";
+
+	mes "[Sir Knight]";
+	mes "Nice to meet you "+ strcharinfo ( 0 ) +", my name is Jacques";
+	mes "Welcome to ^E066FFKyros Ragnarok Online!^000000";
+	mes "I see that you're new here so to help you out I'd like to give you these";
+	mes "items as a gift to show how much we appreciate you here!";
+next;
+	mes "[Sir Knight]";
+	mes "Wish to receive your Freebies?";
+next;
+switch(select("-Yes:-No")) {
+		case 1:
+			set .@i, select(.@menu$)-1;
+			mes "[Sir Knight]";
+			mes "Are you sure you want to switch to the "+jobname(.@jobs[.@i])+" class?";
+			next;
+			if(select("Yes, I'm sure.:No, let me pick again.") == 2) {
+			mes "[Sir Knight]";
+				mes "Okay, take your time.";
+				close;
+			}
+			mes "[Sir Knight]";
+			mes "Job changed!";
+			mes "Take this Supplies, too.";
+			mes "They'll come in handy.";
+				jobchange .@jobs[.@i];
+				set BaseLevel,99;
+				set JobLevel,70;
+				set skillpoint,130;
+				getitembound 33001,1,1;
+				getitembound 33002,1,1;
+				getitembound 13599,15,1;
+				getitembound 14001,50,1;
+				getitembound 14216,10,1;
+				getitembound 13990,10,1;
+				getitembound 12323,500,1;
+				getitembound 569,200,1;
+			set #freebie_quest,1;
+				next;
+					mes "Now Grow Strong Noobie!";
+					close;
+		
+		case 2:
+			mes "Okay Just come back if you are ready to receive your freebies!";
+			close;
+			}
+		}
+
+if(#freebie_quest == 1) 
+	{
+		npctalk "[Sir Knight]: you already have your freebies!";
+		warp "guild_vs5",48,50;
+		end;
+	}
+
+OnInit:
+	waitingroom "Freebies",0;
+	end;
+
+}
+*/
+// ==============================================
+// Training Ground
+// ==============================================
+guild_vs5,50,50,4	script	Master Kulimbat	683,{
+	if(BaseLevel > 10) 
+		{
+		mes "[Kulimbat]";
+		mes "Wish to leave now?";
+			switch(select("Yes:No")){
+				case 1:
+					savepoint "prontera",156,181;
+					mes "Bye!";
+					next;
+					warp "prontera",156,191;
+					end;
+				case 2:
+					close;
+			}
+		}
+		message strcharinfo(0),"You need to become Level 10 above to leave this place";
+		specialeffect2 EF_HEAL2; percentheal 100,100;
+		specialeffect2 EF_INCAGILITY; sc_start SC_INCREASEAGI,240000,10;
+		specialeffect2 EF_BLESSING;	sc_start SC_BLESSING,240000,10;
+		end;
+
+OnInit:
+	waitingroom "Ground Master",0;
+	end;
+	
+
+}
+// Training Ground Mobs
+guild_vs5,0,0	monster	Poring	1002,10
+guild_vs5,0,0	monster	Drops	1113,10
+guild_vs5,0,0	monster	Lunatic	1063,10
+guild_vs5,0,0	monster	ChonChon	1011,10
+guild_vs5,0,0	monster	Condor	1009,10
+guild_vs5,0,0	monster	Picky	1050,10
+guild_vs5,0,0	monster	Willow	1010,10
+guild_vs5,0,0	monster	Roda Frog	1012,10
+guild_vs5,0,0	monster	Condor	1009,10
+guild_vs5,0,0	monster	Picky	1050,10
+guild_vs5,0,0	monster	Willow	1010,10
+guild_vs5,0,0	monster	Roda Frog	1012,10
+guild_vs5,0,0	monster	Rocker	1052,5
+guild_vs5,0,0	monster	Thief Bug	1051,10
+guild_vs5,0,0	monster	Thief Bug	1053,10
+guild_vs5,0,0	monster	Spore	1014,5
+guild_vs5,0,0	monster	Rocker	1052,5
+guild_vs5,0,0	monster	Thief Bug	1051,1
+guild_vs5,0,0	monster	Thief Bug	1053,1
+guild_vs5,0,0	monster	Spore	1014,1
+guild_vs5,0,0	monster	Fabre	1184,5
