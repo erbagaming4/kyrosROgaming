@@ -71,8 +71,8 @@ OnInit:
 		"Double Damage",	//	2 x ATK Rate
 		"Invisibility",		//	Cloaking
 		"Regeneration",		//	HP / SP Regeneration
-		"Self Clone",		//	Create 2 Clones
-		"Unlimit Haste";	//	Improve Movement Speed
+		"Illusion",		//	Create 2 Clones
+		"Haste";	//	Improve Movement Speed
 
 	// npc sprite switching if any.
 	setarray .npc_sprite,

@@ -10,10 +10,10 @@ function getItemReward;		// give the items reward
 	.@eac = eaclass();
 	if ( num_rebirth == .reset_max ) {
 		mes "You can only rebirth x"+ .reset_max +".";
-		emotion e_gasp;
+		emotion ET_SURPRISE;
 		close;
 	}
-	else if( BaseLevel < 255 || JobLevel < 120 || ( !( .@eac&EAJL_2 ) || !Upper ) && ( Class != Job_Ninja && Class != Job_Gunslinger && Class != Job_Soul_Linker && Class != Job_Star_Gladiator) ) {
+	else if( BaseLevel < 99 || JobLevel < 70 || ( !( .@eac&EAJL_2 ) || !Upper ) && ( Class != Job_Ninja && Class != Job_Gunslinger && Class != Job_Soul_Linker && Class != Job_Star_Gladiator) ) {
 		mes "You must be rebirth max level/max job level.";
 		close;
 	}
@@ -29,7 +29,8 @@ function getItemReward;		// give the items reward
 			break;
 		case 2:
 			mes "You can only rebirth ^ff0000x"+ .reset_max +"^000000. You already rebirth ^ff0000x"+ num_rebirth +"^000000.";
-			mes "Each rebirth you get ^ff0000"+ .num_status +"^000000 status points and after ^ff0000"+ .change_reward +"^000000 rebirth, you get only some items.";
+//			mes "Each rebirth you get ^ff0000"+ .num_status +"^000000 status points and after ^ff0000"+ .change_reward +"^000000 rebirth, you get only some items.";
+			mes "Each rebirth you get ^ff0000"+ .num_status +"^000000 status points and after ^ff0000"+ .change_reward +"^000000 rebirth, you are in your max capacity.";
 			close;
 		case 4:
 			mes "Bye.";
@@ -122,22 +123,28 @@ function weightreq {
 }
 
 OnInit:
-	.reset_max = 200;		// how much reset max
-	.change_reward = 150;	// after 30 rebirth, change reward
+	.reset_max = 50;		// how much reset max
+	.change_reward = 50;	// after 30 rebirth, change reward
 	.num_status = 10;		// + X number of status points
 
 // item required <item ID>, <number>
-	setarray .item_req, 7179, 50,
-						7227, 50,
-						969, 300;
+	setarray .item_req, 969, 10,
+						7036, 1,
+						7020, 1,
+						1030, 1,
+						7018, 1,
+						1524, 1,
+						968, 1,
+
+						33006, 3;
 	.size_item = getarraysize( .item_req );
 
 // additionnal items after rebirth >> .change_reward
 // <item ID>, <number>
-	setarray .add_item_req, 7179, 100;
+	setarray .add_item_req, 969, 1;
 
 // rewards <item ID>, <number>
-	setarray .reward, 674, 50;
+	setarray .reward, 33006, 25,33005, 25;
 	.size_reward = getarraysize( .reward );
 	end;
 }

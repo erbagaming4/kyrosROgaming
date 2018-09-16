@@ -1,0 +1,196 @@
+// ====================================================
+// Functions
+// ====================================================
+
+// ====================================================
+// GM HIDEOUT
+// ====================================================
+ra_temsky	mapflag	nowarpto
+
+
+// ====================================================
+// Welcome
+// ====================================================
+-	script	welcome	-1,{
+
+OnPCLoginEvent:
+if (Class==Job_Novice && BaseExp==0 && BaseLevel==1) {
+announce "Let us all Welcome Our Newest Player '' "+ strcharinfo(0) + " ''! Enjoy Playing Here at Kyros Ragnarok Online!",bc_all | bc_blue;
+set BaseExp,1; // (no need to create a new variable)
+	}
+}
+/*
+// ====================================================
+// Online and AFK POINTS
+// ====================================================
+
+-	script	Hourly Active	-1,{
+OnUpdate:
+if( checkvending() == 0 && checkchatting() == 1 ){
+		set @Minute,@Minute + 1;
+		if( @Minute % 60 == 0 ){
+				set #CASHPOINTS, #CASHPOINTS + 1;
+			dispbottom "You've been Active for 1 hour, +1 Cash point(s) in your Balance.";
+			set @Hour,@Hour + 1;
+			if( @Hour % 7 == 0 ){
+				set #CASHPOINTS, #CASHPOINTS + 10;
+				dispbottom "You've been Actively Online for 7 Hours, +10 Cash point(s) in your Balance.";
+			}
+		}
+	}
+	OnPCLoginEvent:
+	addtimer 60000,strnpcinfo(0)+"::OnUpdate";
+	end; 
+}
+
+-	script	Hourly Afk	-1,{
+OnUpdate:
+if( !checkvending() && checkchatting() == 0 ){
+			set @aMinute,@aMinute + 1;
+			if( @aMinute % 60 == 0 ){
+					set #CASHPOINTS, #CASHPOINTS + 1;
+				dispbottom "You've Been AFK for 1 hour, +1 Cash point(s) in your Balance.";
+				set @aHour,@aHour + 1;
+				if( @aHour % 12 == 0 ){
+					set #CASHPOINTS, #CASHPOINTS + 10;
+					dispbottom "You've Been AFK for 12 hours, +1 Cash point(s) in your Balance.";
+				}
+			}
+		}
+		
+		OnPCLoginEvent:
+		addtimer 60000,strnpcinfo(0)+"::OnUpdate";
+		end;
+}
+*/
+
+
+// ====================================================
+// Mapflags
+// ====================================================
+
+thana_boss	mapflag	monster_noteleport
+thana_boss	mapflag	nowarpto
+thana_boss	mapflag	nosave
+thana_boss	mapflag	pvp
+
+lhz_dun01	mapflag	nowarp
+lhz_dun02	mapflag	nowarp
+lhz_dun03	mapflag	nowarp
+
+
+guild_vs5	mapflag	nowarpto
+guild_vs5	mapflag	nowarp
+
+new_1-2	mapflag	nowarpto
+new_1-2	mapflag	nowarp
+// ====================================================
+// Punching Bags
+// ====================================================
+
+prontera,224,79,0	script	PunchingBag#0	844,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Punching Bag",1905,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,1905);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; // Set MD_STATUS_IMMUNE (0x4000000) because EDP/burn/%MHP based status can skew the DPS counter so much.
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Punching Bag : I've taken " + (.@diff/5) + " DPS in last 5 seconds.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+prontera,216,79,0	duplicate(PunchingBag#0)	PunchingBag#1	844
+prontera,224,70,0	duplicate(PunchingBag#0)	PunchingBag#2	844
+prontera,216,58,0	duplicate(PunchingBag#0)	PunchingBag#3	844
+prontera,224,58,0	duplicate(PunchingBag#0)	PunchingBag#4	844
+
+
+// ====================================================
+// itemall
+// ====================================================
+
+//===== eAthena Script ============================================
+//= #itemall
+//===== By: =======================================================
+//= Originally by goddameit
+//= redo by ~AnnieRuru~
+//===== Current Version: ==========================================
+//= 1.0
+//===== Compatible With: ==========================================
+//= eAthena 14910 Trunk TXT/SQL
+//===== Description: ==============================================
+//= give items to all players in the map, or on the server
+//===== Topic =====================================================
+//= http://www.eathena.ws/board/index.php?showtopic=276326
+//===== Additional Comments: ======================================
+//= topic splitted
+//=================================================================
+
+-	script	itemall	-1,{
+OnWhisperGlobal:
+	if ( getgmlevel() < 89 ) end; // configure minimum GM level here
+	if ( compare( @whispervar0$, "map" ) )
+		set .@map$, strcharinfo(3);
+	else if ( compare( @whispervar0$, "all" ) == 0 ) {
+		dispbottom "[itemall] Please enter \"map#<item id>#<item amount>\" or \"all#<item id>#<item amount>\"";
+		end;
+	}
+	set .@itemid, atoi( @whispervar1$ );
+	set .@amount, atoi( @whispervar2$ );
+	if ( getiteminfo( .@itemid, 0 ) == -1 ) {
+		dispbottom "[itemall] Invalid item ID";
+		end;
+	}
+	if ( .@amount == 0 )
+		set .@amount, 1;
+	set .@origin$, strcharinfo(0);
+	while ( .@i < $online_count ) {
+		attachrid getd("$online_aid"+ .@i );
+		if ( .@map$ == "" || strcharinfo(3) == .@map$ ) {
+			message strcharinfo(0), .@origin$ +" gives all players online in this map "+ .@amount +" "+ getitemname(.@itemid);
+			getitem .@itemid, .@amount;
+		}
+		set .@i, .@i +1;
+	}
+	end;
+
+OnPCLoginEvent:
+	setd "$online_aid"+ $online_count, getcharid(3);
+	set $online_count, $online_count +1;
+	end;
+OnPCLogoutEvent:
+	while ( .@i < $online_count && getd("$online_aid"+ .@i ) != getcharid(3) )
+		set .@i, .@i +1;
+	if ( $online_count == .@i ) end; // prevent @loadnpc/@reloadscript bug becos not in the array
+	while ( .@i < $online_count ) {
+		setd "$online_aid"+ .@i, getd("$online_aid"+ ( .@i +1 ) );
+		set .@i, .@i +1;
+	}
+	set $online_count, $online_count -1;
+	end;
+OnInit:
+	if ( getusers(1) ) end;
+	while ( .@i < $online_count ) {
+		setd "$online_aid"+ .@i, 0;
+		set .@i, .@i +1;
+	}
+	set $online_count, 0;
+	end;
+}

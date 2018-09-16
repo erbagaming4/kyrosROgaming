@@ -336,7 +336,7 @@ OnInit:
 	bindatcmd("weaponinfo"	,"PCSTATCALC::OnWeaponInfo",0,99);
 	bindatcmd("wlvlup"	,"PCSTATCALC::OnWeaponLevel",60,99);
 	bindatcmd("wlvl"	,"PCSTATCALC::OnWeaponLevel",60,99);
-	.Weapon = 1;		// Toggle Exp Groth On/Off
+	.Weapon = 1;		// Toggle Exp Growth On/Off
 				//   1 = On
 				//   0 = Off
 
